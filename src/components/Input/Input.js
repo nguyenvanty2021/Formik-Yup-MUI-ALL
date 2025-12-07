@@ -4,54 +4,40 @@ import { FastField } from "formik";
 import { TextField, IconButton, InputAdornment } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import TextErrors from "../TextErrors/TextErrors";
 
-const Input = (props) => {
-  const { label, name, isPassword, ...rest } = props;
+const Input = ({ label, name, isPassword, ...rest }) => {
   const [showPassword, setShowPassword] = React.useState(false);
+
   return (
     <FastField name={name}>
       {({ field, meta }) => {
-        const error = meta.touched && Boolean(meta.error);
-        const helperText = meta.touched && meta.error;
-
-        const commonProps = {
-          fullWidth: true,
-          label,
-          id: name,
-          name,
-          ...field,
-          ...rest,
-          error,
-          helperText,
-        };
-
-        if (!isPassword) {
-          return (
-            <div style={{ marginTop: 8 }}>
-              <TextField {...commonProps} />
-            </div>
-          );
-        }
+        const error = meta.touched && meta.error;
 
         return (
           <div style={{ marginTop: 8 }}>
             <TextField
-              {...commonProps}
-              type={showPassword ? "text" : "password"}
+              fullWidth
+              label={label}
+              id={name}
+              name={name}
+              {...field}
+              {...rest}
+              type={isPassword && !showPassword ? "password" : "text"}
+              error={Boolean(error)}
+              helperText=""
               InputProps={{
-                endAdornment: (
+                endAdornment: isPassword && (
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword((s) => !s)}
-                      edge="end"
-                    >
+                    <IconButton onClick={() => setShowPassword((v) => !v)}>
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
               }}
             />
+
+            {error && <TextErrors>{meta.error}</TextErrors>}
           </div>
         );
       }}

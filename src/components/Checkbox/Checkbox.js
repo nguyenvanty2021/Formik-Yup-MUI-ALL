@@ -6,55 +6,50 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel,
-  FormHelperText,
   FormLabel,
 } from "@mui/material";
+import TextErrors from "../TextErrors/TextErrors";
 
 const Checkbox = (props) => {
   const { label, options, name, ...rest } = props;
 
-  // Lấy field state từ Formik
   const [field, meta, helpers] = useField(name);
-  const { value } = field;
+  const value = Array.isArray(field.value) ? field.value : [];
   const { setValue, setTouched } = helpers;
 
-  // Đảm bảo luôn là mảng
-  const currentValue = Array.isArray(value) ? value : [];
-  const error = meta.touched && Boolean(meta.error);
-
-  const handleChange = (optionValue) => (event) => {
-    console.log("checkbox change", optionValue, event.target.checked);
+  const handleChange = (optionValue) => (e) => {
     let newValue;
-    if (event.target.checked) {
-      newValue = [...currentValue, optionValue];
-    } else {
-      newValue = currentValue.filter((v) => v !== optionValue);
-    }
+
+    if (e.target.checked) newValue = [...value, optionValue];
+    else newValue = value.filter((v) => v !== optionValue);
+
     setValue(newValue);
     setTouched(true, false);
   };
 
+  const showError = meta.touched && meta.error;
+
   return (
-    <FormControl component="fieldset" error={error} sx={{ mt: 2 }}>
-      <FormLabel component="legend">{label}</FormLabel>
+    <FormControl component="fieldset" sx={{ mt: 2 }}>
+      <FormLabel>{label}</FormLabel>
+
       <FormGroup>
-        {options.map((option) => (
+        {options.map((opt) => (
           <FormControlLabel
-            key={option.value}
+            key={opt.value}
             control={
               <MUICheckbox
                 {...rest}
-                name={name}
-                value={option.value}
-                checked={currentValue.includes(option.value)}
-                onChange={handleChange(option.value)}
+                checked={value.includes(opt.value)}
+                onChange={handleChange(opt.value)}
               />
             }
-            label={option.key}
+            label={opt.key}
           />
         ))}
       </FormGroup>
-      {error && <FormHelperText>{meta.error}</FormHelperText>}
+
+      {showError && <TextErrors>{meta.error}</TextErrors>}
     </FormControl>
   );
 };

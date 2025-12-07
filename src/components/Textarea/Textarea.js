@@ -1,15 +1,13 @@
 // src/components/Textarea/Textarea.js
 import { FastField } from "formik";
 import { TextField } from "@mui/material";
+import TextErrors from "../TextErrors/TextErrors";
 
-const Textarea = (props) => {
-  const { label, name, ...rest } = props;
-
+const Textarea = ({ label, name, ...rest }) => {
   return (
     <FastField name={name}>
       {({ field, meta }) => {
-        const error = meta.touched && Boolean(meta.error);
-        const helperText = meta.touched && meta.error;
+        const error = meta.touched && meta.error;
 
         return (
           <div style={{ marginTop: 8 }}>
@@ -19,12 +17,13 @@ const Textarea = (props) => {
               minRows={3}
               label={label}
               id={name}
-              name={name}
               {...field}
               {...rest}
-              error={error}
-              helperText={helperText}
+              error={Boolean(error)}
+              helperText=""
             />
+
+            {error && <TextErrors>{meta.error}</TextErrors>}
           </div>
         );
       }}
