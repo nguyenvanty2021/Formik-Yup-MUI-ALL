@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import ClearIcon from "@mui/icons-material/Clear";
+import { FormControl, FormLabel } from "@mui/material";
 import TextErrors from "../TextErrors/TextErrors";
 
 const DatePickerUI = (props) => {
@@ -20,47 +21,50 @@ const DatePickerUI = (props) => {
 
           return (
             <div style={{ marginTop: 10 }}>
-              <DatePicker
-                label={label}
-                value={field.value || null}
-                onChange={(newValue) => {
-                  form.setFieldValue(name, newValue);
-                }}
-                // ⚠️ v5 dùng inputFormat, không phải format
-                inputFormat="DD/MM/YYYY"
-                // v5 BẮT BUỘC phải có renderInput
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    error={Boolean(showError)}
-                    // ❌ Không show helperText “Required” bên trong
-                    helperText=""
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          {field.value && (
-                            <IconButton
-                              size="small"
-                              onClick={() => {
-                                form.setFieldValue(name, null);
-                                form.setFieldTouched(name, true, false);
-                              }}
-                            >
-                              <ClearIcon fontSize="small" />
-                            </IconButton>
-                          )}
-                          {params.InputProps?.endAdornment}
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-                {...rest}
-              />
+              <FormControl fullWidth error={Boolean(showError)}>
+                <FormLabel
+                  sx={{ color: showError ? "error.main" : "text.primary" }}
+                >
+                  {label}
+                </FormLabel>
 
-              {/* Lỗi hiển thị bên ngoài bằng TextErrors */}
+                <DatePicker
+                  value={field.value || null}
+                  onChange={(newValue) => {
+                    form.setFieldValue(name, newValue);
+                  }}
+                  inputFormat="DD/MM/YYYY"
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      error={Boolean(showError)}
+                      helperText=""
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {field.value && (
+                              <IconButton
+                                size="small"
+                                onClick={() => {
+                                  form.setFieldValue(name, null);
+                                  form.setFieldTouched(name, true, false);
+                                }}
+                              >
+                                <ClearIcon fontSize="small" />
+                              </IconButton>
+                            )}
+                            {params.InputProps?.endAdornment}
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  )}
+                  {...rest}
+                />
+              </FormControl>
+
               {showError && <TextErrors>{meta.error}</TextErrors>}
             </div>
           );

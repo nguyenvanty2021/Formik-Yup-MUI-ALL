@@ -19,10 +19,8 @@ const Checkbox = (props) => {
 
   const handleChange = (optionValue) => (e) => {
     let newValue;
-
     if (e.target.checked) newValue = [...value, optionValue];
     else newValue = value.filter((v) => v !== optionValue);
-
     setValue(newValue);
     setTouched(true, false);
   };
@@ -30,8 +28,10 @@ const Checkbox = (props) => {
   const showError = meta.touched && meta.error;
 
   return (
-    <FormControl component="fieldset" sx={{ mt: 2 }}>
-      <FormLabel>{label}</FormLabel>
+    <FormControl component="fieldset" error={Boolean(showError)} sx={{ mt: 2 }}>
+      <FormLabel sx={{ color: showError ? "error.main" : "text.primary" }}>
+        {label}
+      </FormLabel>
 
       <FormGroup>
         {options.map((opt) => (

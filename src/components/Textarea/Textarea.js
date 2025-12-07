@@ -1,6 +1,6 @@
 // src/components/Textarea/Textarea.js
 import { FastField } from "formik";
-import { TextField } from "@mui/material";
+import { TextField, FormControl, FormLabel } from "@mui/material";
 import TextErrors from "../TextErrors/TextErrors";
 
 const Textarea = ({ label, name, ...rest }) => {
@@ -11,17 +11,22 @@ const Textarea = ({ label, name, ...rest }) => {
 
         return (
           <div style={{ marginTop: 8 }}>
-            <TextField
-              fullWidth
-              multiline
-              minRows={3}
-              label={label}
-              id={name}
-              {...field}
-              {...rest}
-              error={Boolean(error)}
-              helperText=""
-            />
+            <FormControl fullWidth error={Boolean(error)}>
+              <FormLabel sx={{ color: error ? "error.main" : "text.primary" }}>
+                {label}
+              </FormLabel>
+
+              <TextField
+                fullWidth
+                multiline
+                minRows={3}
+                id={name}
+                {...field}
+                {...rest}
+                error={Boolean(error)}
+                helperText=""
+              />
+            </FormControl>
 
             {error && <TextErrors>{meta.error}</TextErrors>}
           </div>

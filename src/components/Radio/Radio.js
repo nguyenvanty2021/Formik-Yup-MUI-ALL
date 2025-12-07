@@ -15,7 +15,7 @@ const Radio = ({ label, options, name, ...rest }) => {
   const { value } = field;
   const { setValue, setTouched } = helpers;
 
-  const error = meta.touched && meta.error;
+  const showError = meta.touched && meta.error;
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -23,8 +23,10 @@ const Radio = ({ label, options, name, ...rest }) => {
   };
 
   return (
-    <FormControl component="fieldset" sx={{ mt: 2 }}>
-      <FormLabel>{label}</FormLabel>
+    <FormControl component="fieldset" error={Boolean(showError)} sx={{ mt: 2 }}>
+      <FormLabel sx={{ color: showError ? "error.main" : "text.primary" }}>
+        {label}
+      </FormLabel>
 
       <RadioGroup row name={name} value={value} onChange={handleChange}>
         {options.map((opt) => (
@@ -37,7 +39,7 @@ const Radio = ({ label, options, name, ...rest }) => {
         ))}
       </RadioGroup>
 
-      {error && <TextErrors>{meta.error}</TextErrors>}
+      {showError && <TextErrors>{meta.error}</TextErrors>}
     </FormControl>
   );
 };
