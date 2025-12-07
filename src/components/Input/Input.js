@@ -1,6 +1,6 @@
 // src/components/Input/Input.js
 import React from "react";
-import { FastField } from "formik";
+import { Field } from "formik";
 import {
   TextField,
   IconButton,
@@ -16,7 +16,7 @@ const Input = ({ label, name, isPassword, ...rest }) => {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
-    <FastField name={name}>
+    <Field name={name}>
       {({ field, meta }) => {
         const error = meta.touched && meta.error;
 
@@ -52,7 +52,7 @@ const Input = ({ label, name, isPassword, ...rest }) => {
           </div>
         );
       }}
-    </FastField>
+    </Field>
   );
 };
 
