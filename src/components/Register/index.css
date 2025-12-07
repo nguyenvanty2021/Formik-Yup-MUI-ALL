@@ -1,0 +1,45 @@
+.register {
+  display: grid;
+  grid-template-columns: 45% 45%;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.btn {
+  width: 10rem;
+  height: 2.5rem;
+}
+.register-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1rem;
+}
+.btn-main {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.data {
+  width: 100%;
+  margin-top: 1rem;
+}
+.register > div {
+    margin-bottom: 1rem;
+}
+@media only screen and (max-width: 600px) {
+  .register {
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .register > div {
+      margin-bottom: 1rem;
+  }
+}
