@@ -1,34 +1,35 @@
-import { Input as InputMain} from "antd";
-import { ErrorMessage, FastField } from "formik";
-import TextErrors from "../TextErrors/TextErrors";
+// src/components/Textarea/Textarea.js
+import { FastField } from "formik";
+import { TextField } from "@mui/material";
 
-const Input = (props) => {
+const Textarea = (props) => {
   const { label, name, ...rest } = props;
-  console.log(props);
-  return (
-    <div>
-   
-      <FastField  name={name}  >
-        {
-          ({field, form, props}) => {
-            console.log(field)
-            console.log(form)
-            console.log(props)
-            const {name} = field;
-            const {errors, touched} = form;
-            const showError = errors[name] && touched[name]
-            return (
-              <div>
-                   <div htmlFor={name}>{label}</div>
-                   <InputMain.TextArea style={showError ? {border:"1px solid red"} : {}} {...rest} {...field} id={name} />
-                   <ErrorMessage component={TextErrors} name={name} />
-              </div>
-            )
-          }
-        }
-      </FastField>
 
-    </div>
+  return (
+    <FastField name={name}>
+      {({ field, meta }) => {
+        const error = meta.touched && Boolean(meta.error);
+        const helperText = meta.touched && meta.error;
+
+        return (
+          <div style={{ marginTop: 8 }}>
+            <TextField
+              fullWidth
+              multiline
+              minRows={3}
+              label={label}
+              id={name}
+              name={name}
+              {...field}
+              {...rest}
+              error={error}
+              helperText={helperText}
+            />
+          </div>
+        );
+      }}
+    </FastField>
   );
 };
-export default Input;
+
+export default Textarea;

@@ -1,3 +1,4 @@
+// src/components/FormikControl/FormikControl.js
 import Checkbox from "../Checkbox/Checkbox";
 import DatePickerUI from "../DatePickerUI/DatePickerUI";
 import Input from "../Input/Input";
@@ -6,7 +7,7 @@ import Select from "../Select/Select";
 import Textarea from "../Textarea/Textarea";
 
 const FormikControl = (props) => {
-  const { control, field, form, isPassword, ...rest } = props;
+  const { control, isPassword, ...rest } = props;
 
   switch (control) {
     case "input":
@@ -31,4 +32,5 @@ const FormikControl = (props) => {
       return null;
   }
 };
+
 export default FormikControl;

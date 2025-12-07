@@ -115,7 +115,7 @@ const Register = () => {
       .min(1, "Please select at least one option")
       .required("Required"),
     // data nào khi khởi tạo = null thì mới thêm .nullable()
-    datePicker: Yup.date().required("Required").nullable(),
+    datePicker: Yup.mixed().required("Required").nullable(),
     // datePicker: Yup.date().default(function() {
     //   return new Date();
     // }),
@@ -217,29 +217,24 @@ const Register = () => {
                   label="City"
                   options={arraySelect}
                   name="select"
-                  placeholder="Choose select"
+                  placeholder="Choose select 1"
                 />
               </div>
               <div>
                 {" "}
                 <FormikControl
                   control="radio"
-                  type="text"
                   label="Radio"
                   name="radio"
                   options={arrayRadio}
-                  placeholder="Choose radio"
                 />
               </div>
               <div>
-                {" "}
                 <FormikControl
                   control="checkbox"
-                  type="text"
                   label="Checkbox"
                   name="checkbox"
                   options={arrayCheckbox}
-                  placeholder="Choose checkbox"
                 />
               </div>
               <div>

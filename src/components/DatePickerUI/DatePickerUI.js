@@ -1,37 +1,67 @@
-import { ErrorMessage, FastField } from "formik";
-import { DatePicker } from "antd";
+// src/components/DatePickerUI/DatePickerUI.js
+import { Field } from "formik";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import ClearIcon from "@mui/icons-material/Clear";
 import TextErrors from "../TextErrors/TextErrors";
+
 const DatePickerUI = (props) => {
   const { label, name, ...rest } = props;
+
   return (
-    <div>
-      <div htmlFor={name}>{label}</div>
-      <FastField name={name}>
-        {({ form, field }) => {
-          const { name, value } = field;
-          const { errors, setFieldValue, touched } = form;
-          const showError = errors[name] && touched[name];
-          return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Field name={name}>
+        {({ field, form, meta }) => (
+          <>
             <DatePicker
-              style={showError ? { border: "1px solid red" } : {}}
-              // ranges={{
-              //   Today: [moment(), moment()],
-              //   "This Month": [
-              //     moment().startOf("month"),
-              //     moment().endOf("month"),
-              //   ],
-              // }}
-              id={name}
-              {...field}
+              label={label}
+              value={field.value || null}
+              onChange={(newValue) => {
+                form.setFieldValue(name, newValue);
+              }}
+              inputFormat="DD/MM/YYYY" // 👈 format dd/MM/yyyy
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  error={Boolean(meta.touched && meta.error)}
+                  // helperText={meta.touched && meta.error ? meta.error : ""}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {field.value && (
+                          <IconButton
+                            size="small"
+                            onClick={() => {
+                              form.setFieldValue(name, null);
+                              form.setFieldTouched(name, true, false);
+                            }}
+                          >
+                            <ClearIcon fontSize="small" />
+                          </IconButton>
+                        )}
+                        {params.InputProps?.endAdornment}
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
               {...rest}
-              selected={value}
-              onChange={(val) => setFieldValue(name, val)}
             />
-          );
-        }}
-      </FastField>
-      <ErrorMessage component={TextErrors} name={name} />
-    </div>
+
+            {/* {meta.touched && meta.error && (
+              <TextErrors>{meta.error}</TextErrors>
+            )} */}
+          </>
+        )}
+      </Field>
+    </LocalizationProvider>
   );
 };
+
 export default DatePickerUI;

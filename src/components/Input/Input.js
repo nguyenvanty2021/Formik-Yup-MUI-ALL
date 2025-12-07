@@ -1,36 +1,62 @@
-import { Input as InputMain } from "antd";
-import { ErrorMessage, FastField } from "formik";
-import TextErrors from "../TextErrors/TextErrors";
+// src/components/Input/Input.js
+import React from "react";
+import { FastField } from "formik";
+import { TextField, IconButton, InputAdornment } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const Input = (props) => {
   const { label, name, isPassword, ...rest } = props;
-  // Chọn component: Input thường hoặc Input.Password
-  const FieldComponent = isPassword ? InputMain.Password : InputMain;
+  const [showPassword, setShowPassword] = React.useState(false);
   return (
-    <div>
-      <FastField name={name}>
-        {({ field, form, props }) => {
-          console.log(field);
-          console.log(form);
-          console.log(props);
-          const { name } = field;
-          const { errors, touched } = form;
-          const showError = errors[name] && touched[name];
+    <FastField name={name}>
+      {({ field, meta }) => {
+        const error = meta.touched && Boolean(meta.error);
+        const helperText = meta.touched && meta.error;
+
+        const commonProps = {
+          fullWidth: true,
+          label,
+          id: name,
+          name,
+          ...field,
+          ...rest,
+          error,
+          helperText,
+        };
+
+        if (!isPassword) {
           return (
-            <div>
-              <div htmlFor={name}>{label}</div>
-              <FieldComponent
-                style={showError ? { border: "1px solid red" } : {}}
-                {...rest}
-                {...field}
-                id={name}
-              />
-              <ErrorMessage component={TextErrors} name={name} />
+            <div style={{ marginTop: 8 }}>
+              <TextField {...commonProps} />
             </div>
           );
-        }}
-      </FastField>
-    </div>
+        }
+
+        return (
+          <div style={{ marginTop: 8 }}>
+            <TextField
+              {...commonProps}
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword((s) => !s)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+        );
+      }}
+    </FastField>
   );
 };
+
 export default Input;

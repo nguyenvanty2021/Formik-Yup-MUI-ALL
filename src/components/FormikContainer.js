@@ -49,10 +49,11 @@ const FormikContainer = () => {
   const validationSchema = Yup.object({
     // nếu có 1 thuộc tính object thì phải lồng nhau tiếp 1 ({}) để check từng key bên trong nữa
 
-
     email: Yup.string().email("Invalid email format").required("Required"),
     password: Yup.string().required("Required"),
-    rePassword: Yup.string().oneOf([Yup.ref("password"), ""], "Password must match").required("Required"),
+    rePassword: Yup.string()
+      .oneOf([Yup.ref("password"), ""], "Password must match")
+      .required("Required"),
     // là số - số dương - kiểu số nguyên
     // có: .matches(regex, message): nữa nha, ngoài ra còn có: lessThan(number, message), moreThan(number, message)
     // số thực thì .boolean()
@@ -77,7 +78,7 @@ const FormikContainer = () => {
     // array.max(limit: number | Ref, message?: string | function): Schema
     checkbox: Yup.array().length(1, "Too Length").required("Required"),
     // data nào khi khởi tạo = null thì mới thêm .nullable()
-    datePicker: Yup.date().required("Required").nullable(),
+    datePicker: Yup.mixed().required("Required").nullable(),
     // datePicker: Yup.date().default(function() {
     //   return new Date();
     // }),
@@ -87,7 +88,6 @@ const FormikContainer = () => {
     console.log(JSON.parse(JSON.stringify(values.datePicker)));
   };
   return (
-   
     <Formik
       onSubmit={onSubmit}
       initialValues={initialValues}
@@ -118,14 +118,14 @@ const FormikContainer = () => {
               name="age"
               placeholder="Input age"
             />
-                        <FormikControl
+            <FormikControl
               control="input"
               type="text"
               label="Password"
               name="password"
               placeholder="Input password"
             />
-                        <FormikControl
+            <FormikControl
               control="input"
               type="text"
               label="Re-password"
@@ -176,7 +176,6 @@ const FormikContainer = () => {
         );
       }}
     </Formik>
- 
- );
+  );
 };
 export default FormikContainer;

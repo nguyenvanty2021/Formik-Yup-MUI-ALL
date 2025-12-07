@@ -1,34 +1,46 @@
-import { Radio as RadioMain } from "antd";
-import { ErrorMessage, FastField } from "formik";
+// src/components/Radio/Radio.js
 import React from "react";
-import TextErrors from "../TextErrors/TextErrors";
+import { useField } from "formik";
+import {
+  Radio as MUIRadio,
+  RadioGroup,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  FormHelperText,
+} from "@mui/material";
 
 const Radio = (props) => {
   const { label, options, name, ...rest } = props;
+
+  const [field, meta, helpers] = useField(name);
+  const { value } = field;
+  const { setValue, setTouched } = helpers;
+
+  const error = meta.touched && Boolean(meta.error);
+
+  const handleChange = (event) => {
+    console.log("radio change", event.target.value);
+    setValue(event.target.value);
+    setTouched(true, false);
+  };
+
   return (
-    <div>
-      <FastField as="select" id={name} name={name} {...rest}>
-        {({ field }) => {
-          return options.map((option, index) => {
-            return (
-              <React.Fragment key={index}>
-                <RadioMain
-                  // type="radio"
-                  id={option.value}
-                  {...field}
-                  value={option.value}
-                  checked={field.value === option.value}
-                >
-                  {option.key}
-                </RadioMain>
-                {/* <div htmlFor={name}>{option.key}</div> */}
-              </React.Fragment>
-            );
-          });
-        }}
-      </FastField>
-      <ErrorMessage component={TextErrors} name={name} />
-    </div>
+    <FormControl component="fieldset" error={error} sx={{ mt: 2 }}>
+      <FormLabel component="legend">{label}</FormLabel>
+      <RadioGroup row name={name} value={value} onChange={handleChange}>
+        {options.map((option) => (
+          <FormControlLabel
+            key={option.value}
+            value={option.value}
+            control={<MUIRadio {...rest} />}
+            label={option.key}
+          />
+        ))}
+      </RadioGroup>
+      {error && <FormHelperText>{meta.error}</FormHelperText>}
+    </FormControl>
   );
 };
+
 export default Radio;

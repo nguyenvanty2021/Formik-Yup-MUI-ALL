@@ -1,70 +1,112 @@
+// src/components/Select/Select.js
 import { Field } from "formik";
-import { Select } from "antd";
-import TextErrors from "../TextErrors/TextErrors";
+import {
+  Select as MUISelect,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+} from "@mui/material";
 
 const Select1 = ({ label, name, options, placeholder, ...rest }) => {
+  const labelId = `${name}-label`;
+
   return (
-    <div>
-      <label htmlFor={name}>{label}</label>
-
+    <div style={{ marginTop: 8 }}>
       <Field name={name}>
-        {({ field, form, meta }) => (
-          <>
-            <Select
-              allowClear
-              placeholder={placeholder || "Choose select"}
-              id={name}
-              {...rest}
-              // "" => undefined để Antd hiện placeholder
-              value={field.value === "" ? undefined : field.value}
-              onChange={(value) => {
-                form.setFieldValue(name, value ?? ""); // khi clear bằng menu (không phải icon X)
-                form.setFieldTouched(name, true, false);
-              }}
-              onClear={() => {
-                form.setFieldValue(name, ""); // Yup thấy ""
-                form.setFieldTouched(name, true, false);
-                form.validateField(name); // ép validate ngay
-              }}
-              onBlur={() => form.setFieldTouched(name, true)}
-              style={{ width: "100%" }}
-              options={options.map((opt) => ({
-                label: opt.key,
-                value: opt.value,
-              }))}
-            />
+        {({ field, form, meta }) => {
+          const error = meta.touched && Boolean(meta.error);
+          const helperText = meta.touched && meta.error;
 
-            {/* 🔥 Tự render lỗi luôn, bỏ ErrorMessage */}
-            {meta.touched && meta.error && (
-              <TextErrors>{meta.error}</TextErrors>
-            )}
-          </>
-        )}
+          return (
+            <FormControl fullWidth error={error}>
+              <InputLabel id={labelId}>{label}</InputLabel>
+              <MUISelect
+                labelId={labelId}
+                id={name}
+                label={label}
+                value={field.value}
+                onChange={(e) => {
+                  form.setFieldValue(name, e.target.value);
+                  form.setFieldTouched(name, true, false);
+                }}
+                onBlur={() => form.setFieldTouched(name, true)}
+                {...rest}
+              >
+                {/* placeholder option */}
+                <MenuItem value="">
+                  <em>{placeholder || "Choose select"}</em>
+                </MenuItem>
+                {options.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.key}
+                  </MenuItem>
+                ))}
+              </MUISelect>
+              {helperText && <FormHelperText>{helperText}</FormHelperText>}
+            </FormControl>
+          );
+        }}
       </Field>
     </div>
   );
 };
 
 export default Select1;
-// import { ErrorMessage, FastField } from "formik";
-// import TextErrors from "../TextErrors/TextErrors";
-// const Select1 = (props) => {
-//   const { label, options, name, ...rest } = props;
-//   console.log(options);
+// // src/components/Select/Select.js
+// import { Field } from "formik";
+// import {
+//   Select as MUISelect,
+//   MenuItem,
+//   FormControl,
+//   InputLabel,
+//   FormHelperText,
+// } from "@mui/material";
+
+// const Select1 = ({ label, name, options, placeholder, ...rest }) => {
+//   const labelId = `${name}-label`;
+
 //   return (
-//     <div>
-//       <div htmlFor={name}>{label}</div>
-//       <FastField as="select" id={name} name={name} {...rest}>
-//         {options.map((option, index) => {
+//     <div style={{ marginTop: 16 }}>
+//       <Field name={name}>
+//         {({ field, form, meta }) => {
+//           const error = meta.touched && Boolean(meta.error);
+//           const helperText = meta.touched && meta.error;
+
 //           return (
-//             <option key={index} value={option.value}>
-//               {option.key}
-//             </option>
+//             <FormControl fullWidth error={error}>
+//               <InputLabel id={labelId}>{label}</InputLabel>
+//               <MUISelect
+//                 labelId={labelId}
+//                 id={name}
+//                 label={label}
+//                 displayEmpty
+//                 value={field.value}
+//                 onChange={(e) => {
+//                   form.setFieldValue(name, e.target.value);
+//                   form.setFieldTouched(name, true, false);
+//                 }}
+//                 onBlur={() => form.setFieldTouched(name, true)}
+//                 {...rest}
+//               >
+//                 {/* item rỗng = placeholder + để clear */}
+//                 <MenuItem value="">
+//                   <em>{placeholder || "Choose select"}</em>
+//                 </MenuItem>
+
+//                 {options.map((opt) => (
+//                   <MenuItem key={opt.value} value={opt.value}>
+//                     {opt.key}
+//                   </MenuItem>
+//                 ))}
+//               </MUISelect>
+//               {helperText && <FormHelperText>{helperText}</FormHelperText>}
+//             </FormControl>
 //           );
-//         })}
-//       </FastField>
-//       <ErrorMessage component={TextErrors} name={name} />
+//         }}
+//       </Field>
 //     </div>
 //   );
 // };
+
 // export default Select1;

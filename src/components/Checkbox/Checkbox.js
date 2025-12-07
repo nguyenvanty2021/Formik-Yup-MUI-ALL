@@ -1,34 +1,62 @@
-import { Checkbox as CheckboxMain } from "antd";
-import { ErrorMessage, FastField } from "formik";
+// src/components/Checkbox/Checkbox.js
 import React from "react";
-import TextErrors from "../TextErrors/TextErrors";
+import { useField } from "formik";
+import {
+  Checkbox as MUICheckbox,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+} from "@mui/material";
 
 const Checkbox = (props) => {
   const { label, options, name, ...rest } = props;
+
+  // Lấy field state từ Formik
+  const [field, meta, helpers] = useField(name);
+  const { value } = field;
+  const { setValue, setTouched } = helpers;
+
+  // Đảm bảo luôn là mảng
+  const currentValue = Array.isArray(value) ? value : [];
+  const error = meta.touched && Boolean(meta.error);
+
+  const handleChange = (optionValue) => (event) => {
+    console.log("checkbox change", optionValue, event.target.checked);
+    let newValue;
+    if (event.target.checked) {
+      newValue = [...currentValue, optionValue];
+    } else {
+      newValue = currentValue.filter((v) => v !== optionValue);
+    }
+    setValue(newValue);
+    setTouched(true, false);
+  };
+
   return (
-    <div>
-      <FastField as="select" id={name} name={name} {...rest}>
-        {({ field }) => {
-          return options.map((option, index) => {
-            return (
-              <React.Fragment key={index}>
-                <CheckboxMain
-                  // type="checkbox"
-                  id={option.value}
-                  {...field}
-                  value={option.value}
-                  checked={field.value.includes(option.value)}
-                >
-                  {option.key}
-                </CheckboxMain>
-                {/* <div htmlFor={name}>{option.key}</div> */}
-              </React.Fragment>
-            );
-          });
-        }}
-      </FastField>
-      <ErrorMessage component={TextErrors} name={name} />
-    </div>
+    <FormControl component="fieldset" error={error} sx={{ mt: 2 }}>
+      <FormLabel component="legend">{label}</FormLabel>
+      <FormGroup>
+        {options.map((option) => (
+          <FormControlLabel
+            key={option.value}
+            control={
+              <MUICheckbox
+                {...rest}
+                name={name}
+                value={option.value}
+                checked={currentValue.includes(option.value)}
+                onChange={handleChange(option.value)}
+              />
+            }
+            label={option.key}
+          />
+        ))}
+      </FormGroup>
+      {error && <FormHelperText>{meta.error}</FormHelperText>}
+    </FormControl>
   );
 };
+
 export default Checkbox;
